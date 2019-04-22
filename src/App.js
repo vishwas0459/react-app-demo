@@ -8,6 +8,7 @@ import { Redirect, Switch, Route } from 'react-router-dom';
 import './App.css';
 import NotFound from './components/notFound';
 import NavBar from './components/navbar';
+import LoginForm from './components/loginForm';
 
 class App extends Component {
   render() {
@@ -16,6 +17,7 @@ class App extends Component {
         <NavBar />
         <main className='container'>
           <Switch>
+            <Route path='/login' component={LoginForm} />
             <Route path='/customer' component={Customer} />
             <Route path='/rentals' component={Rentals} />
             <Route path='/movie/:id' component={MovieForm} />
