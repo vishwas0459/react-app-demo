@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { getMovies } from '../services/fakeMovieService';
 import Like from './common/like';
 import Pagination from './common/pagination';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 class Movies extends Component {
   //get the movie list from fakeservice into state
   state = {
@@ -17,12 +17,21 @@ class Movies extends Component {
   handlePageChange = () => {
     console.log('pagehandle clicked');
   };
+  handleAddMovie = () => {
+    console.log('added new movie');
+    const history = { ...this.props.history }; //get the ref of history object
+    history.push('/movie/new');
+    console.log('history: ', history);
+  };
   render() {
     const { length: movieCount } = this.state.movies;
     if (movieCount === 0) return <p>There are no movies in database!</p>;
     return (
       <div>
         <h3> {movieCount} of movies in database at present!!</h3>
+        <Link to='/movie/new' className='btn btn-primary'>
+          New Movie
+        </Link>
         <table className='table table-hover'>
           <thead>
             <tr>

@@ -9,6 +9,7 @@ import './App.css';
 import NotFound from './components/notFound';
 import NavBar from './components/navbar';
 import LoginForm from './components/loginForm';
+import RegisterForm from './components/registerForm';
 
 class App extends Component {
   render() {
@@ -18,8 +19,10 @@ class App extends Component {
         <main className='container'>
           <Switch>
             <Route path='/login' component={LoginForm} />
+            <Route path='/register' component={RegisterForm} />
             <Route path='/customer' component={Customer} />
             <Route path='/rentals' component={Rentals} />
+            <Route path='/movie/new' component={MovieForm} />
             <Route path='/movie/:id' component={MovieForm} />
             <Route path='/movies' exact component={Movies} />
             <Route path='/not-found' component={NotFound} />

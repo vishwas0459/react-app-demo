@@ -11,8 +11,12 @@ class Form extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const errors = this.validateForm();
+    console.log('errors from From', errors);
     this.setState({ errors });
     if (errors) return;
+
+    //if no error
+    this.doSubmit();
   };
 
   validateForm = () => {
@@ -21,8 +25,8 @@ class Form extends Component {
     const { error } = Joi.validate(this.state.data, this.schema, options);
     if (!error) return null;
     const errors = {};
-    for (let item of error.details) error[item.path[0]] = item.message;
-    // console.log('errors:', errors);
+    for (let item of error.details) errors[item.path[0]] = item.message;
+    console.log('errors:', errors);
     return errors;
   };
 
