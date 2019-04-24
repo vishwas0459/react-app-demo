@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { getMovies } from '../services/fakeMovieService';
 import Like from './common/like';
 import Pagination from './common/pagination';
-import { NavLink, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 class Movies extends Component {
   //get the movie list from fakeservice into state
   state = {
@@ -50,7 +50,7 @@ class Movies extends Component {
                 <th scope='row'>{index + 1}</th>
                 <td>
                   {' '}
-                  <NavLink to={'/movie/' + movie._id}>{movie.title}</NavLink>
+                  <Link to={'/movie/' + movie._id}>{movie.title}</Link>
                 </td>
                 <td>{movie.genre.name}</td>
                 <td>{movie.numberInStock}</td>

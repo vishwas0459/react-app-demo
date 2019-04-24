@@ -11,9 +11,11 @@ class Form extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const errors = this.validateForm();
-    console.log('errors from From', errors);
-    this.setState({ errors });
-    if (errors) return;
+    // console.log('errors from From', errors);
+
+    if (errors)
+      // this.setState({ errors });   setState triggers the render method.
+      return;
 
     //if no error
     this.doSubmit();

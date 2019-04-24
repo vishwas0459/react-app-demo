@@ -2,64 +2,70 @@ import React from 'react';
 import Form from './common/form';
 import Joi from 'joi-browser';
 import { getMovie, saveMovie } from '../services/fakeMovieService';
-import { getGenres } from '../services/fakeGenreService';
+// import { getGenres } from '../services/fakeGenreService';
+// import { getMovies } from './../services/fakeMovieService';
 
-class MovieForm extends Form {
+class MoviesForm extends Form {
   state = {
     data: {
       _id: '',
       title: '',
-      genreId: '', //change to object
+      genreId: '',
       numberInStock: '',
       dailyRentalRate: ''
     },
-    genres: [],
-    errors: {}
+    errors: {},
+    genres: []
   };
 
+  // after form is render at first time
   componentDidMount() {
-    const { id } = this.props.match.params;
-    if (id) {
-      const movieDetails = getMovie(id);
-      console.log(movieDetails);
-      const data = this.mapToViewModel(movieDetails);
+    // console.log(this.props);
+    // if id is present
+    const { id: movieId } = this.props.match.params;
+    // console.log(movieId);
+    if (!movieId) return;
+    else {
+      const movieDetails = getMovie(movieId);
+      console.log('movieDetails', movieDetails);
+      // get the ref to state
+      const data = { ...this.state.data };
+      data.title = movieDetails.title;
+      data.genreId = movieDetails.genre._id;
+      data.dailyRentalRate = movieDetails.dailyRentalRate;
+      data.numberInStock = movieDetails.numberInStock;
+      data._id = movieDetails._id;
+      console.log('data:::', data);
+      this.setState({ data }); // populate the movieForm
 
-      this.setState({ data });
+      // get the genre list
+      // const gList = getGenres();
+      // console.log('gList:', gList);
+      // const genres = {...this.state.genres}
     }
   }
-
-  mapToViewModel = movie => {
-    console.log(movie);
-    const modelMovie = {};
-    modelMovie._id = movie._id;
-    modelMovie.title = movie.id;
-    modelMovie.genreId = getGenres(movie.id);
-    modelMovie.dailyRentalRate = movie.dailyRentalRate;
-    modelMovie.numberInStock = movie.numberInStock;
-    return modelMovie;
-  };
   schema = {
+    _id: Joi.string(), // check how to make a field validation optional
     title: Joi.string().required(),
-    genre: Joi.string().required(),
-    stocks: Joi.number().required(),
-    rate: Joi.number().required()
+    genreId: Joi.string().required(),
+    numberInStock: Joi.number().required(),
+    dailyRentalRate: Joi.number().required()
   };
 
   doSubmit = () => {
-    console.log('In Submit!!');
-    // const savedMovie = saveMovie(this.state.data);
-    // console.log(saveMovie);
+    console.log('Movie saved');
+    saveMovie(this.state.data);
+    this.props.history.push('/');
   };
-
   render() {
-    // const genres = genres;
     return (
       <div className='container'>
-        <form>
+        <h1>Movies Form</h1>
+        <form onSubmit={this.handleSubmit}>
           {this.renderInput('title', 'Title')}
-          {this.renderInput('genre', 'Genre')}
-          {this.renderInput('stocks', 'Number in stocks')}
-          {this.renderInput('rate', 'Rate', 'number')}
+          {this.renderInput('genreId', 'Genre')}
+          {this.renderInput('numberInStock', 'Number in Stocks')}
+          {this.renderInput('dailyRentalRate', 'Daily Rental Rate')}
           {this.renderButton('Save')}
         </form>
       </div>
@@ -67,17 +73,4 @@ class MovieForm extends Form {
   }
 }
 
-export default MovieForm;
-
-// const MovieForm = ({ match, history }) => {
-//   return (
-//     <div className='container'>
-//       <h1>Movie Form {match.params.id}</h1>
-//       <button className='btn btn-primary' onClick={() => history.push('/')}>
-//         Save
-//       </button>
-//     </div>
-//   );
-// };
-
-// export default MovieForm;
+export default MoviesForm;

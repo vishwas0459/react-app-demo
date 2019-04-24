@@ -23,7 +23,9 @@ class RegisterForm extends Form {
       .required()
   };
   doSubmit = () => {
-    console.log('no validation errors');
+    // console.log('no validation errors');
+    this.props.history.push('/movies');
+    // console.log('moved to homepage');
   };
   render() {
     return (
