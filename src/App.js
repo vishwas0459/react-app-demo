@@ -3,24 +3,27 @@ import Movies from './components/movies';
 import MovieForm from './components/movieForm';
 import Customer from './components/customer';
 import Rentals from './components/rentals';
-
+import { ToastContainer } from 'react-toastify';
 import { Redirect, Switch, Route } from 'react-router-dom';
-import './App.css';
 import NotFound from './components/notFound';
 import NavBar from './components/navbar';
 import LoginForm from './components/loginForm';
 import RegisterForm from './components/registerForm';
 
+import './App.css';
+import 'react-toastify/dist/ReactToastify.css';
+
 class App extends Component {
   render() {
     return (
       <React.Fragment>
+        <ToastContainer />
         <NavBar />
         <main className='container'>
           <Switch>
             <Route path='/login' component={LoginForm} />
             <Route path='/register' component={RegisterForm} />
-            <Route path='/customer' component={Customer} />
+            <Route path='/customers' component={Customer} />
             <Route path='/rentals' component={Rentals} />
             <Route path='/movie/new' component={MovieForm} />
             <Route path='/movie/:id' component={MovieForm} />
