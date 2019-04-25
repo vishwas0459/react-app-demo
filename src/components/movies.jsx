@@ -23,15 +23,38 @@ class Movies extends Component {
     history.push('/movie/new');
     console.log('history: ', history);
   };
+  handleSearchMovie = e => {
+    const search = e.currentTarget.value;
+    console.log('serach movie!!!');
+    const allMovies = [...this.state.movies];
+    let movies = [];
+    movies = allMovies.filter(am =>
+      am.title.toLowerCase().includes(search.toLowerCase())
+    );
+    console.log('miv', movies);
+    if (!search.length) {
+      movies = getMovies();
+    }
+    this.setState({ movies: movies });
+  };
+
   render() {
     const { length: movieCount } = this.state.movies;
     if (movieCount === 0) return <p>There are no movies in database!</p>;
     return (
       <div>
-        <h3> {movieCount} of movies in database at present!!</h3>
         <Link to='/movie/new' className='btn btn-primary'>
           New Movie
         </Link>
+        <h3> {movieCount} of movies in database at present!!</h3>
+
+        <input
+          type='text'
+          placeholder='Search your movie'
+          name='searchMovie'
+          className='form-control'
+          onChange={this.handleSearchMovie}
+        />
         <table className='table table-hover'>
           <thead>
             <tr>
