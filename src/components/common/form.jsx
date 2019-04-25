@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import Joi from 'joi-browser';
 import Input from './input';
+import Select from './select';
+import { getGenres } from '../../services/fakeGenreService';
 
 class Form extends Component {
   state = {
     data: {},
-    errors: {}
+    errors: {},
+    options: {}
   };
 
   handleSubmit = e => {
@@ -68,6 +71,21 @@ class Form extends Component {
         label={label}
         id={name}
         value={data[name]}
+        onChange={this.changeHandler}
+        error={errors[name]}
+      />
+    );
+  };
+
+  renderSelect = (name, label, options) => {
+    const { data, errors } = this.state;
+    // const options = getGenres();
+    return (
+      <Select
+        name={name}
+        label={label}
+        value={data[name]}
+        options={options}
         onChange={this.changeHandler}
         error={errors[name]}
       />

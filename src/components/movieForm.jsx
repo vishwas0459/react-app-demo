@@ -2,7 +2,6 @@ import React from 'react';
 import Form from './common/form';
 import Joi from 'joi-browser';
 import { getMovie, saveMovie } from '../services/fakeMovieService';
-import Select from './common/select';
 import { getGenres } from '../services/fakeGenreService';
 // import { getGenres } from '../services/fakeGenreService';
 // import { getMovies } from './../services/fakeMovieService';
@@ -12,7 +11,7 @@ class MoviesForm extends Form {
     data: {
       _id: '',
       title: '',
-      genre: '',
+      genreId: '',
       numberInStock: '',
       dailyRentalRate: ''
     },
@@ -20,36 +19,42 @@ class MoviesForm extends Form {
     genres: []
   };
 
+  schema = {
+    _id: Joi.string(), // check how to make a field validation optional
+    title: Joi.string().required(),
+    genreId: Joi.string().required(),
+    numberInStock: Joi.number().required(),
+    dailyRentalRate: Joi.number().required()
+  };
   // after form is render at first time
   componentDidMount() {
-    // console.log(this.props);
+    const genres = getGenres();
+    this.setState({ genres });
+
     // if id is present
     const { id: movieId } = this.props.match.params;
     // console.log(movieId);
+
     if (!movieId) {
-      const genres = getGenres();
-      this.setState({ genres });
-      console.log('getGenres:', getGenres());
+      return;
     } else {
       const movieDetails = getMovie(movieId);
       console.log('movieDetails', movieDetails);
       // get the ref to state
-      const data = { ...this.state.data };
-      data.title = movieDetails.title;
-      data.genre = movieDetails.genre.name;
-      data.dailyRentalRate = movieDetails.dailyRentalRate;
-      data.numberInStock = movieDetails.numberInStock;
-      data._id = movieDetails._id;
-      console.log('data:::', data);
-      this.setState({ data }); // populate the movieForm
+      const data = this.maptoViewModel(movieDetails);
+      this.setState({ data });
     }
   }
-  schema = {
-    _id: Joi.string(), // check how to make a field validation optional
-    title: Joi.string().required(),
-    genre: Joi.string().required(),
-    numberInStock: Joi.number().required(),
-    dailyRentalRate: Joi.number().required()
+
+  // as the data returned by RestAPI does not alwyas match with VIEW so map it accordingly
+  maptoViewModel = movie => {
+    return {
+      _id: movie._id,
+      genreId: movie.genre._id,
+      title: movie.title,
+      dailyRentalRate: movie.dailyRentalRate,
+      numberInStock: movie.numberInStock
+    };
   };
 
   doSubmit = () => {
@@ -57,6 +62,7 @@ class MoviesForm extends Form {
     saveMovie(this.state.data);
     this.props.history.push('/');
   };
+
   render() {
     const id = this.props.match.params.id;
     return (
@@ -64,12 +70,7 @@ class MoviesForm extends Form {
         <h1>Movies Form</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput('title', 'Title')}
-          {id ? (
-            this.renderInput('genre', 'Genre')
-          ) : (
-            <Select label='Genres' gType={getGenres(this.state.data.genreId)} />
-          )}
-
+          {this.renderSelect('genreId', 'Genres', this.state.genres)}
           {this.renderInput('numberInStock', 'Number in Stocks')}
           {this.renderInput('dailyRentalRate', 'Daily Rental Rate')}
           {this.renderButton('Save')}

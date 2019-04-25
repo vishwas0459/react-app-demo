@@ -1,21 +1,17 @@
 import React from 'react';
-import { getGenres } from '../../services/fakeGenreService';
-const Select = props => {
-  console.log('props: ', props);
-  const genres = getGenres();
+const Select = ({ options, name, label, error, ...rest }) => {
   return (
-    <div className='input-group mb-3'>
-      <div className='input-group-prepend'>
-        <label className='input-group-text' htmlFor='inputGroupSelect01'>
-          {props.label}
-        </label>
-      </div>
-      <select className='custom-select' id='inputGroupSelect01'>
-        <option>Choose...</option>
-        {genres.map(g => (
-          <option key={g._id}>{g.name}</option>
+    <div className='form-group'>
+      <label htmlFor={name}>{label}</label>
+      <select name={name} id={name} {...rest} className='form-control'>
+        <option>Select...</option>
+        {options.map(opt => (
+          <option key={opt._id} value={opt._id}>
+            {opt.name}
+          </option>
         ))}
       </select>
+      {error && <div className='alert alert-danger'>{error}</div>}
     </div>
   );
 };
