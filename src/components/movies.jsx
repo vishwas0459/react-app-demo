@@ -7,7 +7,8 @@ class Movies extends Component {
   //get the movie list from fakeservice into state
   state = {
     movies: getMovies(),
-    pageSize: 4
+    pageSize: 4,
+    search: ''
   };
   handleDelete = mId => {
     console.log('Clicked movie delete on id :', mId);
@@ -25,36 +26,46 @@ class Movies extends Component {
   };
   handleSearchMovie = e => {
     const search = e.currentTarget.value;
-    console.log('serach movie!!!');
-    const allMovies = [...this.state.movies];
+    this.setState({ search });
+    const allMovies = getMovies(); // to be the orginal source of all movies!!!
     let movies = [];
     movies = allMovies.filter(am =>
       am.title.toLowerCase().includes(search.toLowerCase())
     );
-    console.log('miv', movies);
-    if (!search.length) {
-      movies = getMovies();
-    }
     this.setState({ movies: movies });
+  };
+  resetSearch = () => {
+    const movies = getMovies();
+    this.setState({ movies });
   };
 
   render() {
     const { length: movieCount } = this.state.movies;
-    if (movieCount === 0) return <p>There are no movies in database!</p>;
+    if (movieCount === 0)
+      return (
+        <div>
+          <p>There are no movies in database!</p>
+          <button className='btn btn-primary' onClick={this.resetSearch}>
+            Retry
+          </button>
+        </div>
+      );
     return (
       <div>
+        <input
+          type='text'
+          placeholder='Search your movie'
+          name='searchMovie'
+          value={this.state.search}
+          className='form-control my-3'
+          onChange={this.handleSearchMovie}
+        />
+
         <Link to='/movie/new' className='btn btn-primary'>
           New Movie
         </Link>
         <h3> {movieCount} of movies in database at present!!</h3>
 
-        <input
-          type='text'
-          placeholder='Search your movie'
-          name='searchMovie'
-          className='form-control'
-          onChange={this.handleSearchMovie}
-        />
         <table className='table table-hover'>
           <thead>
             <tr>
