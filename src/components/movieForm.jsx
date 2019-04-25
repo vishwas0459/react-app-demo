@@ -36,6 +36,11 @@ class MoviesForm extends Form {
     // console.log(movieId);
 
     if (!movieId) {
+      // this is a workarround
+      const _id = new Date().getTime().toString();
+      const data = { ...this.state.data };
+      data._id = _id;
+      this.setState({ data });
       return;
     } else {
       const movieDetails = getMovie(movieId);
@@ -64,7 +69,7 @@ class MoviesForm extends Form {
   };
 
   render() {
-    const id = this.props.match.params.id;
+    // const id = this.props.match.params.id;
     return (
       <div className='container'>
         <h1>Movies Form</h1>

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Joi from 'joi-browser';
 import Input from './input';
 import Select from './select';
-import { getGenres } from '../../services/fakeGenreService';
 
 class Form extends Component {
   state = {
